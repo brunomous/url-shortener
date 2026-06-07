@@ -1,0 +1,14 @@
+name: url-shortener
+
+services:
+  db:
+    image: postgres:18
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+
+  cache:
+    image: redis:8
+    ports:
+      - 6379:6379
