@@ -5,12 +5,17 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "setup": "docker compose up",
-    "seed": "node src/db/seed.ts"
+    "compose": "docker compose up",
+    "seed": "tsx src/db/seed.ts",
+    "setup": "docker compose up -d && tsx src/db/seed.ts",
+    "dev": "tsx --watch src/index.ts",
+    "build": "tsc",
+    "start": "tsc && node dist/index.js"
   },
   "devDependencies": {
     "@types/node": "^25.9.2",
     "@types/pg": "^8.20.0",
+    "tsx": "^4.22.4",
     "typescript": "^6.0.3"
   },
   "dependencies": {

@@ -1,5 +1,5 @@
-import pool from "./pool.ts";
-import * as dbScripts from "./scripts.ts";
+import pool from "./pool";
+import * as dbScripts from "./scripts";
 
 const seedData = async () => {
   try {
