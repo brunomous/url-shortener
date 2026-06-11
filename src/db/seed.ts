@@ -10,7 +10,7 @@ const seedData = async () => {
     const items = await pool.query(dbScripts.listEntries);
     console.table(items.rows);
   } catch (error) {
-    console.error("Error seeding the database", error);
+    console.error("Error seeding the database: ", error);
   } finally {
     pool.end();
   }
