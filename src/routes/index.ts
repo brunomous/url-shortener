@@ -5,6 +5,6 @@ const router = Router();
 
 router.post("/", createShortUrl);
 
-router.get("/:code", redirectToOriginalUrl);
+router.get("/:slug", redirectToOriginalUrl);
 
 export { router };
