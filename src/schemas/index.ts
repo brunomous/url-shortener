@@ -1,9 +1,9 @@
 import * as zod from "zod";
 
-export const ShorteningPayloadSchema = zod.object({
+export const CreateShortUrlSchema = zod.object({
   url: zod.url(),
 });
 
-export const RedirectParamsSchema = zod.object({
+export const SlugParamsSchema = zod.object({
   slug: zod.string(),
 });

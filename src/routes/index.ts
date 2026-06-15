@@ -1,15 +1,15 @@
 import { Router } from "express";
 import { createShortUrl, redirectToOriginalUrl } from "../controllers";
 import { validate } from "../middleware";
-import { ShorteningPayloadSchema, RedirectParamsSchema } from "../schemas";
+import { CreateShortUrlSchema, SlugParamsSchema } from "../schemas";
 
 const router = Router();
 
-router.post("/", validate(ShorteningPayloadSchema, "body"), createShortUrl);
+router.post("/", validate(CreateShortUrlSchema, "body"), createShortUrl);
 
 router.get(
   "/:slug",
-  validate(RedirectParamsSchema, "params"),
+  validate(SlugParamsSchema, "params"),
   redirectToOriginalUrl,
 );
 

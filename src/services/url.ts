@@ -9,16 +9,16 @@ export const shortenUrl = async (
   try {
     const urlHash = await generateHashFromUrl(url);
     const urlSlug = await generateSlugFromHash(urlHash);
-    const existingQueryRes = await getShortUrlByHash(urlHash);
-    if (existingQueryRes?.slug) {
-      return `${protocol}://${host}/${existingQueryRes.slug}`;
+    const existingUrl = await getShortUrlByHash(urlHash);
+    if (existingUrl?.slug) {
+      return `${protocol}://${host}/${existingUrl.slug}`;
     }
-    const saveQueryRes = await saveUrl({
+    const savedUrl = await saveUrl({
       originalUrl: url,
       hash: urlHash,
       slug: urlSlug,
     });
-    return `${protocol}://${host}/${saveQueryRes.slug}`;
+    return `${protocol}://${host}/${savedUrl.slug}`;
   } catch (error) {
     throw error;
   }
@@ -26,8 +26,8 @@ export const shortenUrl = async (
 
 export const getOriginalUrl = async (slug: string) => {
   try {
-    const queryRes = await getUrlBySlug(slug);
-    return queryRes.original_url;
+    const urlRecord = await getUrlBySlug(slug);
+    return urlRecord.original_url;
   } catch (error) {
     throw error;
   }

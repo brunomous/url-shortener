@@ -1,4 +1,4 @@
-export type ShortUrl = {
+export type NewShortUrl = {
   originalUrl: string;
   hash: string;
   slug: string;
