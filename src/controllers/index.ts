@@ -1,19 +1,20 @@
 import { type Request, type Response } from "express";
-import { shortenUrl, getOriginalUrl } from "../services";
+import { shortenUrl, getOriginalUrl } from "../services/url";
 
 export const createShortUrl = async (req: Request, res: Response) => {
   try {
     const { body } = req;
-    if (!body?.url) {
-      res.status(400).send("Orignal URL is required for this operation.");
-    }
     const shortUrl = await shortenUrl(
       body.url,
       req.protocol,
       req.get("host") || "",
     );
     res.status(201).send({ shortUrl });
-  } catch {
+  } catch (error) {
+    console.error(error);
+    if (Array.isArray(error)) {
+      res.status(400).send(error[0].message);
+    }
     res.status(500).send("Internal server error");
   }
 };
@@ -21,9 +22,6 @@ export const createShortUrl = async (req: Request, res: Response) => {
 export const redirectToOriginalUrl = async (req: Request, res: Response) => {
   try {
     const { slug } = req.params;
-    if (!slug) {
-      res.status(400).send("URL slug is required for this operation.");
-    }
     const originalUrl = await getOriginalUrl(slug as string);
     if (!originalUrl) {
       res.status(404).send("Original URL not found!");
