@@ -6,6 +6,7 @@ A small URL shortening service built with Express, TypeScript, and PostgreSQL. L
 
 - A URL is hashed with SHA-256, and three slices of that hash are mapped onto word lists (adjective, connector, noun) to produce a deterministic slug.
 - The hash is unique, so submitting the same URL twice returns the existing short URL instead of creating a duplicate.
+- Incoming requests are validated with Zod via a reusable middleware before reaching the controllers.
 
 ## Tech stack
 
@@ -13,14 +14,17 @@ A small URL shortening service built with Express, TypeScript, and PostgreSQL. L
 - **Web:** Express 5
 - **Database:** PostgreSQL (`pg`)
 - **Cache:** Redis (provisioned via Docker, not yet wired in)
+- **Validation:** Zod
 - **Tooling:** tsx, ESLint, Prettier, Vitest + Supertest
 
 ## API
 
 | Method | Route     | Description                                  |
 | ------ | --------- | -------------------------------------------- |
-| `POST` | `/`       | Create a short URL. Body: `{ "url": "..." }`. Returns `{ "shortUrl": "..." }`. |
+| `POST` | `/`       | Create a short URL. Body: `{ "url": "..." }` (must be a valid URL). Returns `{ "shortUrl": "..." }`. |
 | `GET`  | `/:slug`  | Redirect (302) to the original URL.          |
+
+Invalid input returns `400` with the validation errors.
 
 Example:
 
@@ -85,8 +89,10 @@ src/
   app.ts            Express app and middleware
   index.ts          Server entry point
   routes/           Route definitions
+  middleware/       Zod validation middleware
+  schemas/          Zod request schemas
   controllers/      Request handlers
-  services/         Business logic (shortening, hashing)
+  services/         Business logic (shortening, hashing, logging)
   repositories/     Database queries
   db/               Pool, schema, scripts, seeding
   constants/        Word lists for slug generation
