@@ -1,4 +1,5 @@
 import pool from "../db/pool";
+import { cacheUrl, retrieveCachedUrl } from "../db/redis";
 import { type NewShortUrl } from "../db/types";
 
 export const getShortUrlByHash = async (hash: string) => {
@@ -20,6 +21,7 @@ export const saveUrl = async (newUrl: NewShortUrl) => {
       newUrl.hash,
       newUrl.slug,
     ]);
+    await cacheUrl(newUrl.slug, newUrl);
     return result.rows[0];
   } catch (error) {
     throw error;
@@ -28,6 +30,10 @@ export const saveUrl = async (newUrl: NewShortUrl) => {
 
 export const getUrlBySlug = async (slug: string) => {
   try {
+    const cached = await retrieveCachedUrl(slug);
+    if (cached?.originalUrl) {
+      return cached;
+    }
     const text = "SELECT * FROM urls WHERE slug = $1";
     const result = await pool.query(text, [slug]);
     return result.rows[0];

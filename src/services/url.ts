@@ -27,7 +27,7 @@ export const shortenUrl = async (
 export const getOriginalUrl = async (slug: string) => {
   try {
     const urlRecord = await getUrlBySlug(slug);
-    return urlRecord.original_url;
+    return urlRecord.original_url ?? urlRecord.originalUrl;
   } catch (error) {
     throw error;
   }
